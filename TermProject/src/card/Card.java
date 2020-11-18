@@ -1,4 +1,4 @@
-package Card;
+package card;
 
 public class Card {
 	private boolean Showingface=false;
@@ -12,7 +12,7 @@ public class Card {
 	}
 
 	public void flip() {
-		if(Showingface==false)
+		if(Showingface == false)
 			Showingface=true;
 		else
 			Showingface=false;

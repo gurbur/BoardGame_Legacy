@@ -1,4 +1,4 @@
-package Dice;
+package dice;
 
 public class Dice {
 	public static int roll() {
