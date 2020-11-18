@@ -11,5 +11,5 @@ public class Marker {
 	
 	public int getPlayer() { return player; }
 	public int getType() { return type; }
-	
+	//test minor
 }
