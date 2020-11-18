@@ -10,10 +10,12 @@
 package board;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import marker.Marker;
 
 public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다.
-	private ArrayList<Blank<Marker>> blank = new ArrayList<Blank<Marker>>();
+	private List<Blank<Marker>> blank = new ArrayList<Blank<Marker>>();
 	
 	public BoardExample() { //체커의 게임판을 구성해보는 걸로 예시를 듭니다. 8 * 8의 게임 보드판이지만, 그 중 실제 게임말이 올라갈 수 있는 칸은 64가 아니라 32칸입니다. 따라서 32개의 Blank를 갖도록 설계하였습니다.
 		super(32);
@@ -76,7 +78,7 @@ public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다
 		return output;
 	}
 	
-	public void onBoard(Marker marker, int position/*blank 상의 위치*/, int index/*전체 게임말 중, 이 게임말이 갖는 index번호*/) {
+	public void onBoard(Marker marker, int position, int index) { //Marker 객체, blank상의 위치, 전체 게임말 중 이 게임말이 갖는 index 번호
 		//지정된 위치의 Blank에 Marker를 올리기 위한 매소드. 게임을 시작할 때, 게임의 메인함수에서 기본적으로 올라가 있어야 하는 칸에 Marker를 올립니다. 
 		blank.set(position, new Blank<Marker>(index, marker));
 	}
@@ -96,7 +98,7 @@ public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다
 			return;
 		}
 		
-		//아래부터 난해한 부분. ArrayList내부의 두 값을 서로 바꿔주기 위한 작업.
+		//ArrayList내부의 두 값을 서로 바꿔주기 위한 작업.
 		
 		//1. 각 Blank안의 'data<Marker>'들과 Blank를 'markerTemp', 'blankTemp'라고하는 임시 변수에 넣어준다.
 		Marker markerTemp_start = blank.get(position).getData();
@@ -111,11 +113,10 @@ public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다
 		blank.set(targetPosition, blankTemp_target);
 		//4. Blank안의 data값 교환(=Marker의 이동)이 성공적으로 이루어진다.
 		
-		//이렇게 코드가 난해하게 작성된 이유는, ArrayList는 직접적으로 index번호만을 가지고 내부의 자료에 접근할 수 없기 때문.
+		//ArrayList는 직접적으로 index번호만을 가지고 내부의 자료에 접근할 수 없음.
 		//따라서, ArrayList에서 자료를 뽑아낸 다음, 뽑아낸 자료의 내부 값을 가져와 서로 바꿔주고, 변경된 자료를 다시 ArrayList안에 넣어주는 방식.
+		//+)Generic Type의 경우, 배열 선언이 불가능하기 때문에  ArrayList를 사용할 수 밖에 없음.
 		
-		//Q. 그러면 ArrayList가 아니라 그냥 배열을 사용하면 안되는가?
-		//A. Generic Type의 경우, 배열 선언이 불가능하기 때문에  ArrayList를 사용할 수 밖에 없음.
 		System.out.println("Movement Completed Successfully.");
 	}
 	
