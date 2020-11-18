@@ -15,6 +15,8 @@ public class PlayingCardDeck {
 		this.doNeedJoker = doNeedJoker;
 		if(doNeedJoker == true)
 			makeJokerCards();
+		
+		shuffleCards();
 	}
 	
 	//기본 52개의 카드를 만듦
@@ -29,8 +31,8 @@ public class PlayingCardDeck {
 	
 	//조커카드 추가
 	private void makeJokerCards() {
-		CardDeck.add(new PlayingCard('J', 1));
-		CardDeck.add(new PlayingCard('J', 2));
+		CardDeck.add(new PlayingCard('J', 0));// 흑백
+		CardDeck.add(new PlayingCard('J', 1));// 컬러
 	}
 		
 	public void shuffleCards() {
@@ -39,17 +41,20 @@ public class PlayingCardDeck {
 		for (int n = 0; n < 500; n++) {
 			i = (int) (Math.random()*nCards);
 			j = (int) (Math.random()*nCards);
-			PlayingCard cTmp1=CardDeck.get(i);
-			PlayingCard cTmp2=CardDeck.get(j);		  
+			PlayingCard cTmp1 = CardDeck.get(i);
+			PlayingCard cTmp2 = CardDeck.get(j);	  
 			CardDeck.set(i, cTmp2);
-			CardDeck.set(i, cTmp1);
+			CardDeck.set(j, cTmp1);
 		}
 	}
 	
 	public Card pop() {
-		int random=(int)(CardDeck.size()*Math.random());
-		PlayingCard temp=CardDeck.get(random);
+		int random = (int)(CardDeck.size() * Math.random());
+		PlayingCard temp = CardDeck.get(random);
 		CardDeck.remove(random);
+		//int index = 0;
+		//PlayingCard temp = CardDeck.get(index);
+		//CardDeck.remove(index);
 		return temp;
 	}
 	
@@ -57,11 +62,13 @@ public class PlayingCardDeck {
 		for(int i = 0; i < CardDeck.size(); i++)
 			CardDeck.remove(i);
 		makeCards();
-		shuffleCards();		
+		if(doNeedJoker == true)
+			makeJokerCards();
+		shuffleCards();
 	}
 
 	public int size() {
 		return CardDeck.size();
 	}
-		
+	
 }

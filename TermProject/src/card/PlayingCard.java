@@ -19,6 +19,21 @@ public class PlayingCard extends Card{
 	
 	@Override
 	public String toString() {
-		return "" + suit + num;
+		if(suit == 'J') {
+			if(num == 0)
+				return "Black Joker";
+			else
+				return "Color Joker";
+		}
+		if(num == 1)
+			return "A" + suit;
+		else if(num == 11)
+			return "J" + suit;
+		else if(num == 12)
+			return "Q" + suit;
+		else if(num == 13)
+			return "K" + suit;
+		else
+			return "" + num + suit;
 	}
 }
