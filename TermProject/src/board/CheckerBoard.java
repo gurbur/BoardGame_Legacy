@@ -2,7 +2,6 @@ package board;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import marker.Marker;
 
 public class CheckerBoard extends Board{
@@ -12,6 +11,8 @@ public class CheckerBoard extends Board{
 	 * 0: normal
 	 * 1: king
 	 */
+	//private boolean[][] connectionSilently = new boolean[32][32];
+	
 	
 	public CheckerBoard() {
 		super(32);
@@ -42,6 +43,19 @@ public class CheckerBoard extends Board{
 			super.makeConnection(13 + i, 16 + i);
 			super.makeConnection(21 + i, 24 + i);
 		}
+		/*for(int i = 0; i < 24; i++) {
+			if(i % 4 != 0) {
+				makeConnectionSilently(i, i + 7);
+				makeConnectionSilently(i + 7, i);
+			}
+			if(i % 4 != 3) {
+				makeConnectionSilently(i, i + 9);
+				makeConnectionSilently(i + 9, i);
+			}
+		}*/
+		
+		
+		
 	}
 	@Override
 	public boolean isConnected(int a, int b) { return super.isConnected(a, b); }
@@ -78,9 +92,19 @@ public class CheckerBoard extends Board{
 		return output;
 	}
 	
+	//private void makeConnectionSilently(int a, int b) { connectionSilently[a][b] = true; }
+	
 	public void onBoard(Marker marker, int position, int index) { //Marker 객체, blank상의 위치, 전체 게임 판의 칸(or 말) 중 이 칸이 갖는 index 번호
 		//지정된 위치의 Blank에 Marker를 올리기 위한 매소드. 게임을 시작할 때, 게임의 메인함수에서 기본적으로 올라가 있어야 하는 칸에 Marker를 올립니다. 
 		blank.set(position, new Blank<Marker>(index, marker));
+	}
+	
+	public Marker getMarker(int index) {
+		return blank.get(index).getData();
+	}
+	
+	public Blank<Marker> getBlank(int index) {
+		return blank.get(index);
 	}
 	
 	public boolean isOnBoard(int position) { //지정된 위치에 해당하는 Blank에 Marker가 있는지 없는지를 확인하기 위한 매소드.
@@ -110,7 +134,7 @@ public class CheckerBoard extends Board{
 		blank.set(targetPosition, blankTemp_target);
 		
 		
-		System.out.println("Movement Completed Successfully.");
+		System.out.println("Movement made Successfully.");
 	}
 	
 	public void exchangeToKing(int position) { // normal상태의 게임말을 king상태의 게임말로 대체하는 메소드.
@@ -120,5 +144,36 @@ public class CheckerBoard extends Board{
 		
 		blank.set(position, new Blank<Marker>(index, marker));
 	}
+	
+	public boolean isAbleCapture() {
+		List<Integer> ableList = new ArrayList<Integer>();
+		for(int i = 0; i < 32; i++)
+			for(int j = 1; j < 32; j++) {
+				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer())) {
+					if(i - j == 4 && isConnected(j, j - 5))
+						ableList.add(i);
+					else if(i - j == 4 && isConnected(j, j - 3))
+						ableList.add(i);
+					else if(i - j == 3 && isConnected(j, j - 4))
+						ableList.add(i);
+					else if(i - j == 5 && isConnected(j, j - 4))
+						ableList.add(i);
+					else if(i - j == -4 && isConnected(j, j + 3))
+						ableList.add(i);
+					else if(i - j == -4 && isConnected(j, j + 5))
+						ableList.add(i);
+					else if(i - j == -5 && isConnected(j, j + 4))
+						ableList.add(i);
+					else if(i - j == -3 && isConnected(j, j + 4))
+						ableList.add(i);
+					
+				}
+			}
+		if(ableList.isEmpty())
+			return false;
+		else
+			return true;
+	}
+	
 	
 }
