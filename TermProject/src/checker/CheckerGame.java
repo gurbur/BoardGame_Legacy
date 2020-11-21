@@ -17,8 +17,11 @@ public class CheckerGame implements Game{
 	
 	@Override
 	public void gameStart() {
+		//initialization
 		checkerBoard = new CheckerBoard();
+		makeBoard();
 		
+		//main game start
 		mainGame();
 	}
 	
@@ -27,12 +30,17 @@ public class CheckerGame implements Game{
 		while(true) {
 			showGameBoard();
 			
+			
+			
+			
+			
+			
 			break;
 		}
 	}
 	
 	@Override
-	public String toString() { //must show game instruction properly. search on wikipedia, namuwiki or something.
+	public String toString() { //must show game instruction properly.
 		String output = "체스 판(8*8)에서 진행하는 게임입니다.\n";
 		output += "각 말은 대각선 전방으로 밖에 전진할 수 없으며, 만일 상대의 말 바로 다음이 한 칸 비었을 경우에는 그 말을 뛰어넘어서 반드시! 잡아먹어야 합니다.\n";
 		output += "만일 잡아먹을 수 있는 말이 연속적으로 있는 경우에는, 한 턴에 연속되어 있는 말을 모두 잡아먹어야만 합니다.\n";
@@ -45,5 +53,13 @@ public class CheckerGame implements Game{
 	
 	private void showGameBoard() {
 		System.out.println(checkerBoard);
+	}
+	
+	private void makeBoard() {
+		for (int i = 0; i < 8; i++) {
+			checkerBoard.onBoard(new Marker(0, 0), i, i);
+			checkerBoard.onBoard(new Marker(1, 0), i + 24, i + 8);
+		}	
+		
 	}
 }

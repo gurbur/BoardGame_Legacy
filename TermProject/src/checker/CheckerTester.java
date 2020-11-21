@@ -1,6 +1,10 @@
 package checker;
 
 import java.util.Scanner;
+/*
+ * Tester Å¬·¡½º¿¡¼­´Â ¼³Á¤°ª¸¸ ÀÔ·Â¹Ş°í GameÅ¬·¡½ºÀÇ gameStart()¸¦ È£­„ÇÏµµ·Ï ÇØÁÖ¼¼¿ä.
+ * 
+ */
 
 public class CheckerTester {
 

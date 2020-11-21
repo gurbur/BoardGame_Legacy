@@ -50,36 +50,20 @@ public class CheckerBoard extends Board{
 		String output = "";
 		for(int i = 0; i < 32; i++) {
 			String block;
-			if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28)) output += "[] ";
+			if(i % 8 >= 0 && i % 8 <= 3) output += "[] "; //빈 칸이 먼저 출력되야 하는 경우
 			
 			if(blank.get(i).isEmpty() == false) {
-				if(((Marker)blank.get(i).getData()).getPlayer() == 0) {
-					if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28)) {
-						if(blank.get(i).getData().getType() == 0)
-							block = " A ";
-						else
-							block = " Ak";
-					}
-					else {
-						if(blank.get(i).getData().getType() == 0)
-							block = "A  ";
-						else
-							block = "Ak ";
-					}
+				if(blank.get(i).getData().getPlayer() == 0) {
+					if(blank.get(i).getData().getType() == 0)
+						block = "A  ";
+					else
+						block = "Ak ";
 				}
 				else {
-					if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28)) {
-						if(blank.get(i).getData().getType() == 0)
-							block = " B ";
-						else
-							block = " Bk";
-					}
-					else {
-						if(blank.get(i).getData().getType() == 0)
-							block = "B  ";
-						else
-							block = "Bk ";
-					}
+					if(blank.get(i).getData().getType() == 0)
+						block = "B  ";
+					else
+						block = "Bk ";
 				}
 			}
 			else {
@@ -88,8 +72,8 @@ public class CheckerBoard extends Board{
 			}
 			output += block;
 			
-			if((i >= 4 && i < 8) || (i >= 12 && i < 16) || (i >= 20 && i < 24) || (i >= 28 && i < 32)) output += "[] ";
-			if(i == 3 || i == 7 || i == 11 || i == 15 || i == 19 || i == 23 || i == 27 || i == 31) output += "\n";
+			if(i % 8 >= 4 && i % 8 <= 7) output += "[] ";//빈 칸이 나중에 출력되야 하는 경우
+			if(i % 4 == 3) output += "\n";//다음 줄로 넘어가야 하는 경우
 		}
 		return output;
 	}
@@ -129,7 +113,7 @@ public class CheckerBoard extends Board{
 		System.out.println("Movement Completed Successfully.");
 	}
 	
-	public void exchangeToKing(int position) {
+	public void exchangeToKing(int position) { // normal상태의 게임말을 king상태의 게임말로 대체하는 메소드.
 		int index = blank.get(position).getIndex();
 		int player = blank.get(position).getData().getPlayer();
 		Marker marker = new Marker(player, 1); // marker type: 0 = normal, 1 = king
