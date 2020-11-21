@@ -1,11 +1,3 @@
-/**
- * 
- * Board와 Blank, Marker를 이용하여 판을 구성하는 테스트를 위한 클래스 입니다.
- * 체커의 게임판 (8 * 8)을 예시로 하여 구성되었고, 실제 게임의 구성은 구현하지 않고, Blank의 구성, 각 Blank간의 연결,
- * 게임판 출력 등의 기능들만 예시로 담았습니다.
- * 실제 게임 보드판을 만들 때 참고하시면 더 편하게 만들 수 있을 것 같습니다.
- * 
- */
 
 package board;
 
@@ -14,10 +6,10 @@ import java.util.List;
 
 import marker.Marker;
 
-public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다.
+public class BoardExample extends Board {
 	private List<Blank<Marker>> blank = new ArrayList<Blank<Marker>>();
 	
-	public BoardExample() { //체커의 게임판을 구성해보는 걸로 예시를 듭니다. 8 * 8의 게임 보드판이지만, 그 중 실제 게임말이 올라갈 수 있는 칸은 64가 아니라 32칸입니다. 따라서 32개의 Blank를 갖도록 설계하였습니다.
+	public BoardExample() {
 		super(32);
 		
 		for(int i = 0; i < 32; i++)
@@ -46,34 +38,34 @@ public class BoardExample extends Board { // Board클래스를 상속받도록 하였습니다
 	@Override
 	public boolean isConnected(int a, int b) { return super.isConnected(a, b); }
 	@Override
-	public String toString() { //사용자에게 보드의 상태를 보여줄 때 사용하는 매소드. 단순 테스트용으로 급하게 만들었기 때문에 수정이 많이 필요함.
+	public String toString() { //사용자에게 보드의 상태를 보여줄 때 사용하는 매소드.
 		String output = "";
 		for(int i = 0; i < 32; i++) {
 			String block;
-			if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28)) output += " □";
+			if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28)) output += "[] ";
 			
 			if(blank.get(i).isEmpty() == false) {
 				if(((Marker)blank.get(i).getData()).getPlayer() == 0) {
 					if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28))
-						block = " A";
+						block = " A ";
 					else
-						block = "A ";
+						block = "A  ";
 				}
 				else {
 					if(i < 4 || (i >= 8 && i < 12) || (i >= 16 && i < 20) || (i >= 24 && i < 28))
-						block = " B";
+						block = " B ";
 					else
-						block = "B ";
+						block = "B  ";
 				}
 			}
 			else {
-				if (i < 10) block = " " + i;
-				else block = "" + i;
+				if (i < 10) block = " " + i + " ";
+				else block = "" + i + " ";
 			}
 			output += block;
 			
-			if((i >= 4 && i < 8) || (i >= 12 && i < 16) || (i >= 20 && i < 24) || (i >= 28 && i < 32)) output += " □";
-			if(i == 3 || i == 7 || i == 11 || i == 15 || i == 19 || i == 23 || i == 27 || i == 31) output += "\n";
+			if((i >= 4 && i < 8) || (i >= 12 && i < 16) || (i >= 20 && i < 24) || (i >= 28 && i < 32)) output += "[] ";
+			if(i == 3 || i == 7 || i == 11 || i == 15 || i == 19 || i == 23 || i == 27 || i == 31) output += "\n\n";
 		}
 		return output;
 	}
