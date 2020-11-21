@@ -6,11 +6,11 @@ public class Board {
 	
 	public Board(int boardSize) {
 		connection = new boolean[boardSize][boardSize];
-		for (int i = 0; i < boardSize; i++) {
+		/*for (int i = 0; i < boardSize; i++) {
 			for (int j = 0; j < boardSize; j++) {
 				connection[i][j] = false;
 			}
-		}
+		}*/
 	}//end of Constructor
 	
 	void makeConnection(int a, int b) { connection[a][b] = true; }
