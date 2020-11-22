@@ -145,35 +145,88 @@ public class CheckerBoard extends Board{
 		blank.set(position, new Blank<Marker>(index, marker));
 	}
 	
-	public boolean isAbleCapture() {
+	public List<Integer> getCapturableList() {
 		List<Integer> ableList = new ArrayList<Integer>();
 		for(int i = 0; i < 32; i++)
 			for(int j = 1; j < 32; j++) {
 				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer())) {
-					if(i - j == 4 && isConnected(j, j - 5))
+					if(i - j == 4 && isConnected(j, j - 5)) {
 						ableList.add(i);
-					else if(i - j == 4 && isConnected(j, j - 3))
+						ableList.add(j);
+					}
+					else if(i - j == 4 && isConnected(j, j - 3)) {
 						ableList.add(i);
-					else if(i - j == 3 && isConnected(j, j - 4))
+						ableList.add(j);
+					}
+					else if(i - j == 3 && isConnected(j, j - 4)) {
 						ableList.add(i);
-					else if(i - j == 5 && isConnected(j, j - 4))
+						ableList.add(j);
+					}
+					else if(i - j == 5 && isConnected(j, j - 4)) {
 						ableList.add(i);
-					else if(i - j == -4 && isConnected(j, j + 3))
+						ableList.add(j);
+					}
+					else if(i - j == -4 && isConnected(j, j + 3)) {
 						ableList.add(i);
-					else if(i - j == -4 && isConnected(j, j + 5))
+						ableList.add(j);
+					}
+					else if(i - j == -4 && isConnected(j, j + 5)) {
 						ableList.add(i);
-					else if(i - j == -5 && isConnected(j, j + 4))
+						ableList.add(j);
+					}
+					else if(i - j == -5 && isConnected(j, j + 4)) {
 						ableList.add(i);
-					else if(i - j == -3 && isConnected(j, j + 4))
+						ableList.add(j);
+					}
+					else if(i - j == -3 && isConnected(j, j + 4)) {
 						ableList.add(i);
+						ableList.add(j);
+					}
 					
 				}
 			}
-		if(ableList.isEmpty())
-			return false;
-		else
-			return true;
+		return ableList;
 	}
 	
+	public void captureMarker(int position, int target, List<Integer> ableList) {
+		/*
+		 * if(i - j == 4 && isConnected(j, j - 5)) {
+		 * 
+		 * } else if(i - j == 4 && isConnected(j, j - 3)) {
+		 * 
+		 * } else if(i - j == 3 && isConnected(j, j - 4)) {
+		 * 
+		 * } else if(i - j == 5 && isConnected(j, j - 4)) {
+		 * 
+		 * } else if(i - j == -4 && isConnected(j, j + 3)) {
+		 * 
+		 * } else if(i - j == -4 && isConnected(j, j + 5)) {
+		 * 
+		 * } else if(i - j == -5 && isConnected(j, j + 4)) {
+		 * 
+		 * } else if(i - j == -3 && isConnected(j, j + 4)) {
+		 * 
+		 * }
+		 */
+	}
 	
+	public boolean isEmpty() {
+		if(blank.isEmpty()) return true;
+		else return false;
+	}
+	
+	public static boolean isEquals(CheckerBoard a, CheckerBoard b) {
+		for(int i = 0; i < 32; i++) {
+			Blank<Marker> atmp = a.getBlank(i);
+			Blank<Marker> btmp = b.getBlank(i);
+			if(a.isEmpty() || b.isEmpty() || atmp.isEmpty() || btmp.isEmpty()) {
+				return false;
+			}
+			else if(!a.isEmpty() && !b.isEmpty() && !(atmp.getData().getPlayer() == btmp.getData().getPlayer()) && !(atmp.getData().getType() == btmp.getData().getType())) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
 }
