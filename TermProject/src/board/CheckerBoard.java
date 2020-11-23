@@ -231,33 +231,6 @@ public class CheckerBoard extends Board{
 		if(isConnected(a, a + 4) && connectionSilently[a][a + 9] && isConnected(a + 4, a + 9) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player /*&& getBlank(a + 9).isEmpty()*/) {
 			ableList.add(a + 9);
 		}
-		/*
-		if(a - b == 4 && isConnected(b, b - 5)) { // upward
-			ableList.add(b - 5);
-		}
-		if(a - b == 4 && isConnected(b, b - 3)) {
-			ableList.add(b - 3);
-		}
-		if(a - b == 3 && isConnected(b, b - 4)) {
-			ableList.add(b - 4);
-		}
-		if(a - b == 5 && isConnected(b, b - 4)) {
-			ableList.add(b - 4);
-		}
-		
-		if(a - b == -4 && isConnected(b, b + 3)) { // downward
-			ableList.add(b + 3);
-		}
-		if(a - b == -4 && isConnected(b, b + 5)) {
-			ableList.add(b + 5);
-		}
-		if(a - b == -5 && isConnected(b, b + 4)) {
-			ableList.add(b + 4);
-		}
-		if(a - b == -3 && isConnected(b, b + 4)) {
-			ableList.add(b + 4);
-		}
-		*/
 		
 		return ableList;
 	}
