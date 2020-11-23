@@ -61,6 +61,7 @@ public class CheckerBoard extends Board{
 		
 		
 	}
+	public boolean isConnectedSilently(int a, int b) { return connectionSilently[a][b]; }
 	@Override
 	public boolean isConnected(int a, int b) { return super.isConnected(a, b); }
 	@Override
@@ -154,35 +155,35 @@ public class CheckerBoard extends Board{
 		for(int i = 0; i < 32; i++)
 			for(int j = 1; j < 32; j++) {
 				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer()) && this.getMarker(i).getPlayer() == (whosTurn ? 0 : 1)) {
-					if(i - j == 4 && isConnected(j, j - 5)) {
+					if(i - j == 4 && j > 5 && isConnected(j, j - 5)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == 4 && isConnected(j, j - 3)) {
+					else if(i - j == 4 && j > 3 && isConnected(j, j - 3)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == 3 && isConnected(j, j - 4)) {
+					else if(i - j == 3 && j > 4 && isConnected(j, j - 4)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == 5 && isConnected(j, j - 4)) {
+					else if(i - j == 5 && j > 4 && isConnected(j, j - 4)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == -4 && isConnected(j, j + 3)) {
+					else if(i - j == -4 && j < 28 && isConnected(j, j + 3)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == -4 && isConnected(j, j + 5)) {
+					else if(i - j == -4 && j < 26 && isConnected(j, j + 5)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == -5 && isConnected(j, j + 4)) {
+					else if(i - j == -5 && j < 27 && isConnected(j, j + 4)) {
 						ableList.add(i);
 						ableList.add(j);
 					}
-					else if(i - j == -3 && isConnected(j, j + 4)) {
+					else if(i - j == -3 && j < 27 && isConnected(j, j + 4)) {
 						ableList.add(i);
 						ableList.add(j);
 					}

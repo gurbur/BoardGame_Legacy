@@ -21,7 +21,11 @@ public class Blank <T> {
 	public void setData(T data) { this.data = data; }
 	
 	public boolean isEmpty() {
-		if(data == null) return true;
-		else return false;
+		try {
+			if(data.equals(null)) return true;
+			else return false;
+		} catch(NullPointerException ex) {
+			return true;
+		}
 	}
 }
