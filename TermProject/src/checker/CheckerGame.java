@@ -55,8 +55,37 @@ public class CheckerGame implements Game{
 			
 			
 			List<Integer> ableList = new ArrayList<Integer>();
+			ableList = checkerBoard.getCapturableList(whosTurn);
 			
-			ableList = checkerBoard.getCapturableList();
+			System.out.println("===================");
+			for(int i = 0; i < ableList.size(); i ++)
+				System.out.printf("%d\n", ableList.get(i));
+			System.out.println("===================");
+			
+			for(int i = ableList.size() - 1; i >= 0; i--) {
+				if(i % 2 == 0) {
+					if(!(checkerBoard.getBlank(ableList.get(i)).isEmpty()) && checkerBoard.getMarker(ableList.get(i)).getType() == 0) { // king인 경우를 제외
+						System.out.println("checked");
+						if(whosTurn) { // 1p의 경우
+							if(ableList.get(i) > ableList.get(i + 1)) {
+								ableList.remove(i + 1);
+								ableList.remove(i);
+							}
+						}
+						else { // 2p의 경우
+							if(ableList.get(i) < ableList.get(i + 1)) {
+								ableList.remove(i + 1);
+								ableList.remove(i);
+							}
+						}
+					}
+				}
+			}
+			
+			System.out.println("===================");
+			for(int i = 0; i < ableList.size(); i ++)
+				System.out.printf("%d\n", ableList.get(i));
+			System.out.println("===================");
 			
 			while(true) { // loop for moving
 				try {
@@ -64,7 +93,7 @@ public class CheckerGame implements Game{
 					
 						System.out.println("어느 위치에 있는 말을 움직일까요?");
 						int position = in.nextInt();
-						if(position < 0 && position > 32)
+						if(position < 0 || position > 32)
 							throw new IndexOutOfBoundsException();
 						if(checkerBoard.getBlank(position).isEmpty())
 							throw new InputMismatchException("그 위치에는 말이 없습니다.");
@@ -85,54 +114,151 @@ public class CheckerGame implements Game{
 						
 						
 						checkerBoard.move(position, targetPosition);
+						System.out.println("말을 이동하였습니다.");
 						if(targetPosition >= 28 && targetPosition <= 31 && whosTurn && checkerBoard.getMarker(targetPosition).getType() == 0)// 1p의 경우
 							kingMe(targetPosition);
-						else if(targetPosition >= 0 && targetPosition <= 3 && !whosTurn && checkerBoard.getMarker(targetPosition).getType() == 0)// 1p의 경우
+						else if(targetPosition >= 0 && targetPosition <= 3 && !whosTurn && checkerBoard.getMarker(targetPosition).getType() == 0)// 2p의 경우
 							kingMe(targetPosition);
 						break; // break loop for moving
 					
 					}
 					else {
-						System.out.println("상대의 말을 잡을 수 있는 말이 있습니다.");
-						System.out.printf("%d", ableList.get(0));
-						if(ableList.size() > 1) {
-							for(int i = 2; i < ableList.size(); i += 2)
-								System.out.printf(", %d", ableList.get(i));
-						}
-						System.out.println("칸에 있는 말을 움직여 상대의 말을 잡아야만 합니다.\n");
+						System.out.println("*상대의 말을 잡을 수 있는 말이 있습니다.");
+						
 						System.out.println("어느 위치에 있는 말을 움직일까요?");
 						int position = in.nextInt();
-						if(position < 0 && position > 32)
+						//in.nextLine();
+						if(position < 0 || position > 32)
 							throw new IndexOutOfBoundsException();
 						if(checkerBoard.getBlank(position).isEmpty())
 							throw new InputMismatchException("그 위치에는 말이 없습니다.");
 						if(checkerBoard.getMarker(position).getPlayer() != (whosTurn ? 0 : 1))
 							throw new InputMismatchException("플레이어의 말이 아닙니다.");
-						if(!ableList.contains(position))
+						if(ableList.indexOf(position) % 2 != 0)
 							throw new InputMismatchException("상대의 말을 잡을 수 있는 말이 있을 때에는 잡아야만 합니다.");
 						
-						int target = ableList.get(ableList.indexOf(position) + 1);
+						
 						System.out.println("말을 어느 위치로 옮길까요?");
-						System.out.printf("%d", target);
-						//ableList.index
 						
 						int targetPosition = in.nextInt();
 						if((targetPosition < 0 && targetPosition > 32))
 							throw new IndexOutOfBoundsException();
-						if(!checkerBoard.getBlank(targetPosition).isEmpty() || position == targetPosition)
+						if(!(checkerBoard.getBlank(targetPosition).isEmpty()) || position == targetPosition)
 							throw new InputMismatchException("그 위치로는 말이 움직일 수 없습니다.");
 						
+						int a;
 						
+						if(checkerBoard.getMarker(position).getPlayer() == 0) {
+							a = ableList.get(ableList.indexOf(position) + 1);
+						}
+						else {
+							a = ableList.get(ableList.indexOf(position) + 1);
+						}
+						
+						if (checkerBoard.getMarker(position).getType() != 1) { // King이 아닐 때.
+							if(checkerBoard.getMarker(position).getPlayer() == 0) { // 1p
+								if(position < targetPosition) { // downward(forward)
+									
+									checkerBoard.captureMarker(position, a, targetPosition);//먼저 잡고,
+									checkerBoard.move(position, a);//한 칸,
+									checkerBoard.move(a, targetPosition);//두 칸 이동.
+									
+									System.out.println("상대의 말을 잡았습니다!");
+								}
+								else {// upward(backward)
+									throw new InputMismatchException("뒤로 움직일 수 있는 말은 킹 상태의 말 뿐입니다.");
+								}
+								
+							}
+							else { // 2p
+								if(position < targetPosition) { // downward(backward)
+									throw new InputMismatchException("뒤로 움직일 수 있는 말은 킹 상태의 말 뿐입니다.");
+								}
+								else { // upward(forward)
+									checkerBoard.captureMarker(position, a, targetPosition);
+									checkerBoard.move(position, a);
+									checkerBoard.move(a, targetPosition);
+									
+									System.out.println("상대의 말을 잡았습니다!");
+								}
+							}
+						}
+						else {
+							checkerBoard.captureMarker(position, a, targetPosition);
+							checkerBoard.move(position, a);
+							checkerBoard.move(a, targetPosition);
+							
+							System.out.println("상대의 말을 잡았습니다!");
+						}
+						// 여기에 연속뛰기 추가하기
+						/*
+						ableList = checkerBoard.getCapturableList(whosTurn);
+						
+						//debugging
+						System.out.println("===================");
+						for(int i = 0; i < ableList.size(); i ++)
+							System.out.printf("%d\n", ableList.get(i));
+						System.out.println("===================");
+						
+						for(int i = ableList.size() - 1; i >= 0; i--) {
+							if(i % 2 == 0) {
+								if(!(checkerBoard.getBlank(ableList.get(i)).isEmpty()) && checkerBoard.getMarker(ableList.get(i)).getType() == 0) { // king인 경우를 제외
+									System.out.println("checked");
+									if(whosTurn) { // 1p의 경우
+										if(ableList.get(i) > ableList.get(i + 1)) {
+											ableList.remove(i + 1);
+											ableList.remove(i);
+										}
+									}
+									else { // 2p의 경우
+										if(ableList.get(i) < ableList.get(i + 1)) {
+											ableList.remove(i + 1);
+											ableList.remove(i);
+										}
+									}
+								}
+								if(ableList.get(i) - ableList.get(i + 1) == 3 && !checkerBoard.getBlank(ableList.get(i + 1) - 4).isEmpty()) {
+									checkerBoard.getBlank(ableList.get(i + 1) - 4)
+								}
+								
+							}
+						}
+						
+						System.out.println("===================");
+						for(int i = 0; i < ableList.size(); i ++)
+							System.out.printf("%d\n", ableList.get(i));
+						System.out.println("===================");
+						//debugging end
+						
+						if(ableList.indexOf(targetPosition) % 2 == 0) {
+							System.out.println("잡을 수 있는 말이 또 있습니다!");
+							
+						}
+						
+						else {*/
+							whosTurn = !whosTurn;
+						//}
+						
+						if(targetPosition >= 28 && targetPosition <= 31 && whosTurn && checkerBoard.getMarker(targetPosition).getType() == 0)// 1p의 경우
+							kingMe(targetPosition);
+						else if(targetPosition >= 0 && targetPosition <= 3 && !whosTurn && checkerBoard.getMarker(targetPosition).getType() == 0)// 1p의 경우
+							kingMe(targetPosition);
 						break; // break loop for moving
 					}
 				} catch(InputMismatchException ex) {
-					System.out.printf("잘못된 입력입니다: %s\n", ex.getMessage());
+					if(ex.getMessage() == null)
+						System.out.println("잘못된 입력입니다: 0~32사이의 값을 넣어주세요.\n");
+					else
+						System.out.printf("잘못된 입력입니다: %s\n", ex.getMessage());
 					in.nextLine();
 				} catch(IndexOutOfBoundsException ex) {
 					System.out.printf("잘못된 입력입니다: 0~32사이의 값을 입력해주세요.\n");
-				}
+					ex.printStackTrace();
+				}/* catch(Exception ex) {
+					System.out.printf("%s\n", ex.getMessage());
+				}*/
 				
-			}// end loop for moving
+			} // end loop for moving
 			
 			
 			
@@ -143,7 +269,7 @@ public class CheckerGame implements Game{
 				System.out.println("보드의 상태가 3턴 째 같습니다. 무승부 처리합니다.");
 				break;
 			}
-			whosTurn = !whosTurn;
+			
 		}
 	}
 	
@@ -176,9 +302,22 @@ public class CheckerGame implements Game{
 		 * checkerBoard.onBoard(new Marker(1, 1), i + 24, i + 8); }
 		 */ // test case: all marker is king
 		
-		checkerBoard.onBoard(new Marker(0, 0), 24, 0);
-		checkerBoard.onBoard(new Marker(1, 0), 7, 1);
-		// test case: only one marker each
+		/*
+		 * checkerBoard.onBoard(new Marker(0, 0), 10, 0); checkerBoard.onBoard(new
+		 * Marker(1, 0), 14, 1); checkerBoard.onBoard(new Marker(1, 0), 15, 2);
+		 * checkerBoard.onBoard(new Marker(0, 0), 18, 3); // test case: what if two
+		 * marker is capturable
+		 */
+		
+		//checkerBoard.onBoard(new Marker(0, 0), 10, 0);
+		//checkerBoard.onBoard(new Marker(1, 0), 6, 1);
+		//checkerBoard.onBoard(new Marker(0, 0), ,);
+		//test case: two kings crossed
+		
+		checkerBoard.onBoard(new Marker(1, 1), 14, 0);
+		checkerBoard.onBoard(new Marker(1, 1), 21, 1);
+		checkerBoard.onBoard(new Marker(0, 1), 24, 2);
+		checkerBoard.onBoard(new Marker(1, 1), 10, 3);
 		
 	}
 	

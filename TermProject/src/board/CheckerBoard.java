@@ -11,7 +11,7 @@ public class CheckerBoard extends Board{
 	 * 0: normal
 	 * 1: king
 	 */
-	//private boolean[][] connectionSilently = new boolean[32][32];
+	private boolean[][] connectionSilently = new boolean[32][32];
 	
 	
 	public CheckerBoard() {
@@ -37,13 +37,17 @@ public class CheckerBoard extends Board{
 			super.makeConnection(8 * i + 6, 8 * i + 1);
 			super.makeConnection(8 * i + 2, 8 * i + 7);
 			super.makeConnection(8 * i + 7, 8 * i + 2);
+			
 		}
-		for(int i = 0; i < 3; i++) {
-			super.makeConnection(5 + i, 8 + i);
-			super.makeConnection(13 + i, 16 + i);
-			super.makeConnection(21 + i, 24 + i);
+		for(int i = 1; i <= 3; i++) {
+			super.makeConnection(8 * i - 3, 8 * i);
+			super.makeConnection(8 * i, 8 * i - 3);
+			super.makeConnection(8 * i - 2, 8 * i + 1);
+			super.makeConnection(8 * i + 1, 8 * i - 2);
+			super.makeConnection(8 * i - 1, 8 * i + 2);
+			super.makeConnection(8 * i + 2, 8 * i - 1);
 		}
-		/*for(int i = 0; i < 24; i++) {
+		for(int i = 0; i < 24; i++) {
 			if(i % 4 != 0) {
 				makeConnectionSilently(i, i + 7);
 				makeConnectionSilently(i + 7, i);
@@ -52,7 +56,7 @@ public class CheckerBoard extends Board{
 				makeConnectionSilently(i, i + 9);
 				makeConnectionSilently(i + 9, i);
 			}
-		}*/
+		}
 		
 		
 		
@@ -92,7 +96,7 @@ public class CheckerBoard extends Board{
 		return output;
 	}
 	
-	//private void makeConnectionSilently(int a, int b) { connectionSilently[a][b] = true; }
+	private void makeConnectionSilently(int a, int b) { connectionSilently[a][b] = true; }
 	
 	public void onBoard(Marker marker, int position, int index) { //Marker 객체, blank상의 위치, 전체 게임 판의 칸(or 말) 중 이 칸이 갖는 index 번호
 		//지정된 위치의 Blank에 Marker를 올리기 위한 매소드. 게임을 시작할 때, 게임의 메인함수에서 기본적으로 올라가 있어야 하는 칸에 Marker를 올립니다. 
@@ -114,11 +118,11 @@ public class CheckerBoard extends Board{
 	
 	public void move(int position, int targetPosition) { //Blank에 올라가 있는 Marker를 다른 Blank로 옮기기 위한 매소드.
 		if (isOnBoard(position) == false || isOnBoard(targetPosition) == true) {
-			System.out.println("Error in BoardExample.move;one of selected blanks is already filled or empty.");
+			System.out.println("Error in CheckerBoard.move;one of selected blanks is already filled or empty.");
 			return;
 		}
 		if (this.isConnected(position, targetPosition) == false) {
-			System.out.println("Error in BoardExample.move;selected blanks are not connected.");
+			System.out.println("Error in CheckerBoard.move;selected blanks are not connected.");
 			return;
 		}
 		
@@ -134,7 +138,7 @@ public class CheckerBoard extends Board{
 		blank.set(targetPosition, blankTemp_target);
 		
 		
-		System.out.println("Movement made Successfully.");
+		//System.out.println("Movement made Successfully.");
 	}
 	
 	public void exchangeToKing(int position) { // normal상태의 게임말을 king상태의 게임말로 대체하는 메소드.
@@ -145,11 +149,11 @@ public class CheckerBoard extends Board{
 		blank.set(position, new Blank<Marker>(index, marker));
 	}
 	
-	public List<Integer> getCapturableList() {
+	public List<Integer> getCapturableList(boolean whosTurn) {
 		List<Integer> ableList = new ArrayList<Integer>();
 		for(int i = 0; i < 32; i++)
 			for(int j = 1; j < 32; j++) {
-				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer())) {
+				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer()) && this.getMarker(i).getPlayer() == (whosTurn ? 0 : 1)) {
 					if(i - j == 4 && isConnected(j, j - 5)) {
 						ableList.add(i);
 						ableList.add(j);
@@ -188,26 +192,73 @@ public class CheckerBoard extends Board{
 		return ableList;
 	}
 	
-	public void captureMarker(int position, int target, List<Integer> ableList) {
+	public void captureMarker(int position, int target, int targetPosition) {
+		Blank<Marker> temp = blank.get(target);
+		temp.popData();
+		//move(position, target);
+		//move(target, targetPosition);
+	}
+	
+	public List<Integer> whereCapturable(int a, boolean whosTurn/*, int b*/) {
+		List<Integer> ableList = new ArrayList<Integer>();
+		int player = whosTurn ? 0 : 1;
+		
+		
+		
+		if(isConnected(a, a - 4) && connectionSilently[a][a - 9] && isConnected(a - 4, a - 9) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player /*&& getBlank(a - 9).isEmpty()*/) {
+			ableList.add(a - 9);
+		}
+		if(isConnected(a, a - 3) && connectionSilently[a][a - 7] && isConnected(a - 3, a - 7) && !getBlank(a - 3).isEmpty() && getMarker(a - 3).getPlayer() != player /*&& getBlank(a - 7).isEmpty()*/) {
+			ableList.add(a - 7);
+		}
+		if(isConnected(a, a + 4) && connectionSilently[a][a + 7] && isConnected(a + 4, a + 7) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player /*&& getBlank(a + 7).isEmpty()*/) {
+			ableList.add(a + 7);
+		}
+		if(isConnected(a, a + 5) && connectionSilently[a][a + 9] && isConnected(a + 5, a + 9) && !getBlank(a + 5).isEmpty() && getMarker(a + 5).getPlayer() != player /*&& getBlank(a + 9).isEmpty()*/) {
+			ableList.add(a + 9);
+		}
+		
+		if(isConnected(a, a - 5) && connectionSilently[a][a - 9] && isConnected(a - 5, a - 9) && !getBlank(a - 5).isEmpty() && getMarker(a - 5).getPlayer() != player /*&& getBlank(a - 9).isEmpty()*/) {
+			ableList.add(a - 9);
+		}
+		if(isConnected(a, a - 4) && connectionSilently[a][a - 7] && isConnected(a - 4, a - 7) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player /*&& getBlank(a - 7).isEmpty()*/) {
+			ableList.add(a - 7);
+		}
+		if(isConnected(a, a + 3) && connectionSilently[a][a + 7] && isConnected(a + 3, a + 7) && !getBlank(a + 3).isEmpty() && getMarker(a + 3).getPlayer() != player /*&& getBlank(a + 7).isEmpty()*/) {
+			ableList.add(a + 7);
+		}
+		if(isConnected(a, a + 4) && connectionSilently[a][a + 9] && isConnected(a + 4, a + 9) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player /*&& getBlank(a + 9).isEmpty()*/) {
+			ableList.add(a + 9);
+		}
 		/*
-		 * if(i - j == 4 && isConnected(j, j - 5)) {
-		 * 
-		 * } else if(i - j == 4 && isConnected(j, j - 3)) {
-		 * 
-		 * } else if(i - j == 3 && isConnected(j, j - 4)) {
-		 * 
-		 * } else if(i - j == 5 && isConnected(j, j - 4)) {
-		 * 
-		 * } else if(i - j == -4 && isConnected(j, j + 3)) {
-		 * 
-		 * } else if(i - j == -4 && isConnected(j, j + 5)) {
-		 * 
-		 * } else if(i - j == -5 && isConnected(j, j + 4)) {
-		 * 
-		 * } else if(i - j == -3 && isConnected(j, j + 4)) {
-		 * 
-		 * }
-		 */
+		if(a - b == 4 && isConnected(b, b - 5)) { // upward
+			ableList.add(b - 5);
+		}
+		if(a - b == 4 && isConnected(b, b - 3)) {
+			ableList.add(b - 3);
+		}
+		if(a - b == 3 && isConnected(b, b - 4)) {
+			ableList.add(b - 4);
+		}
+		if(a - b == 5 && isConnected(b, b - 4)) {
+			ableList.add(b - 4);
+		}
+		
+		if(a - b == -4 && isConnected(b, b + 3)) { // downward
+			ableList.add(b + 3);
+		}
+		if(a - b == -4 && isConnected(b, b + 5)) {
+			ableList.add(b + 5);
+		}
+		if(a - b == -5 && isConnected(b, b + 4)) {
+			ableList.add(b + 4);
+		}
+		if(a - b == -3 && isConnected(b, b + 4)) {
+			ableList.add(b + 4);
+		}
+		*/
+		
+		return ableList;
 	}
 	
 	public boolean isEmpty() {
