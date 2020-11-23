@@ -3,19 +3,16 @@ package card;
 import java.util.ArrayList;
 
 public class PlayingCardDeck {
-	//private char[] suitarray= {'J','♣', '♥', '◆', '♠'};
-	//private PlayingCard[] CardDeck=new PlayingCard[54];
-	//배열로 구현
-	
+
 	private boolean doNeedJoker;
 	private ArrayList<PlayingCard> CardDeck= new ArrayList<PlayingCard>();
 	
-	PlayingCardDeck(boolean doNeedJoker) {
+	//public 추가
+	public PlayingCardDeck(boolean doNeedJoker) {
 		this.makeCards();
 		this.doNeedJoker = doNeedJoker;
 		if(doNeedJoker == true)
-			makeJokerCards();
-		
+			makeJokerCards();		
 		shuffleCards();
 	}
 	
