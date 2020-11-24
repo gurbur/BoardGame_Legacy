@@ -1,6 +1,6 @@
 package board;
 
-public class Blank <T> {
+public class Blank <T>{
 	private final int index;
 	private T data;
 	
@@ -10,7 +10,7 @@ public class Blank <T> {
 	}
 	
 	public T getData() { return data; }
-	int getIndex() { return index; }
+	public int getIndex() { return index; }
 	
 	public T popData() {
 		T tmp = data;
@@ -27,5 +27,11 @@ public class Blank <T> {
 		} catch(NullPointerException ex) {
 			return true;
 		}
+	}
+	
+	@Override
+	public Blank<T> clone() {
+		Blank<T> temp = new Blank<T>(this.getIndex(), this.getData());
+		return temp;
 	}
 }

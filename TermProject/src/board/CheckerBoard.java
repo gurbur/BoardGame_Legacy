@@ -61,6 +61,8 @@ public class CheckerBoard extends Board{
 		
 		
 	}
+	
+	
 	public boolean isConnectedSilently(int a, int b) { return connectionSilently[a][b]; }
 	@Override
 	public boolean isConnected(int a, int b) { return super.isConnected(a, b); }
@@ -137,9 +139,6 @@ public class CheckerBoard extends Board{
 		
 		blank.set(position, blankTemp_start);
 		blank.set(targetPosition, blankTemp_target);
-		
-		
-		//System.out.println("Movement made Successfully.");
 	}
 	
 	public void exchangeToKing(int position) { // normal상태의 게임말을 king상태의 게임말로 대체하는 메소드.
@@ -196,8 +195,6 @@ public class CheckerBoard extends Board{
 	public void captureMarker(int position, int target, int targetPosition) {
 		Blank<Marker> temp = blank.get(target);
 		temp.popData();
-		//move(position, target);
-		//move(target, targetPosition);
 	}
 	
 	public List<Integer> whereCapturable(int a, boolean whosTurn/*, int b*/) {
@@ -236,22 +233,33 @@ public class CheckerBoard extends Board{
 	}
 	
 	public boolean isEmpty() {
-		if(blank.isEmpty()) return true;
-		else return false;
+		if("[] Ak []  1 []  2 []  3 \r\n 4 []  5 []  6 []  7 [] \r\n[]  8 []  9 [] 10 [] 11 \r\n12 [] 13 [] 14 [] 15 [] \r\n[] 16 [] 17 [] 18 [] 19 \r\n20 [] 21 [] 22 [] 23 [] \r\n[] 24 [] 25 [] 26 [] 27 \r\n28 [] 29 [] 30 [] Bk [] \r\n".equals(this.toString())) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isEquals(CheckerBoard a, CheckerBoard b) {
-		for(int i = 0; i < 32; i++) {
-			Blank<Marker> atmp = a.getBlank(i);
-			Blank<Marker> btmp = b.getBlank(i);
-			if(a.isEmpty() || b.isEmpty() || atmp.isEmpty() || btmp.isEmpty()) {
-				return false;
-			}
-			else if(!a.isEmpty() && !b.isEmpty() && !(atmp.getData().getPlayer() == btmp.getData().getPlayer()) && !(atmp.getData().getType() == btmp.getData().getType())) {
-				return false;
-			}
-		}
-		return true;
-		
+		if(a.toString().equals(b.toString()))
+			return true;
+		else
+			return false;
 	}
+	
+	public static CheckerBoard copy(CheckerBoard board) {
+		CheckerBoard output = new CheckerBoard();
+		
+		for(int i = 0; i < 32; i++)
+			output.blank.add(new Blank<Marker>(0, null));
+		
+		for(int i = 0; i < board.blank.size(); i++) {
+			output.blank.set(i, board.blank.get(i).clone());
+		}
+		
+		return output;
+	}
+	
+	
+	
+	
 }
