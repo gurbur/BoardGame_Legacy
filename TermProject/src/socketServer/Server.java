@@ -37,7 +37,11 @@ public class Server {
 			while(true) {
 				try {
 					Socket client = server.accept();
-					
+					if(list.size() > 2) {
+						byte[] b = "Sorry, the server is full.\r\n".getBytes();
+						client.getOutputStream().write(b);
+						break;
+					}
 					list.add(client);
 					
 					System.out.println("Client connected IP address =" + client.getRemoteSocketAddress().toString());
