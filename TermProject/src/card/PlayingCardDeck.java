@@ -45,7 +45,7 @@ public class PlayingCardDeck {
 		}
 	}
 	
-	public Card pop() {
+	public PlayingCard pop() {
 		int random = (int)(CardDeck.size() * Math.random());
 		PlayingCard temp = CardDeck.get(random);
 		CardDeck.remove(random);
