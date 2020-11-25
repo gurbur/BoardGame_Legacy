@@ -20,6 +20,7 @@ public class CheckerBoard extends Board{
 		for(int i = 0; i < 32; i++)
 			blank.add(new Blank<Marker>(0, null));
 		
+		//보드의 blank들에 연결관계를 만들어 줍니다. super class의 makeConnection()을 이용합니다.
 		for(int i = 0; i < 7; i++) {
 			super.makeConnection(4 * i, 4 * i + 4);
 			super.makeConnection(4 * i + 4, 4 * i);
@@ -47,6 +48,8 @@ public class CheckerBoard extends Board{
 			super.makeConnection(8 * i - 1, 8 * i + 2);
 			super.makeConnection(8 * i + 2, 8 * i - 1);
 		}
+		
+		//게임말이 상대의 말을 잡는 경우에, 연산을 조금 더 쉽게하기 위해서 한 대각선에 존재하는 두칸 떨어진 blank들 사이에 연결 관게를 만듭니다.
 		for(int i = 0; i < 24; i++) {
 			if(i % 4 != 0) {
 				makeConnectionSilently(i, i + 7);
@@ -120,6 +123,7 @@ public class CheckerBoard extends Board{
 	}
 	
 	public void move(int position, int targetPosition) { //Blank에 올라가 있는 Marker를 다른 Blank로 옮기기 위한 매소드.
+		//--디버그를 위해서 임의로 추가한 코드입니다.--
 		if (isOnBoard(position) == false || isOnBoard(targetPosition) == true) {
 			System.out.println("Error in CheckerBoard.move;one of selected blanks is already filled or empty.");
 			return;
@@ -128,6 +132,7 @@ public class CheckerBoard extends Board{
 			System.out.println("Error in CheckerBoard.move;selected blanks are not connected.");
 			return;
 		}
+		//-----
 		
 		Marker markerTemp_start = blank.get(position).getData();
 		Marker markerTemp_target = blank.get(targetPosition).getData();
@@ -149,14 +154,15 @@ public class CheckerBoard extends Board{
 		blank.set(position, new Blank<Marker>(index, marker));
 	}
 	
-	public List<Integer> getCapturableList(boolean whosTurn) {
+	public List<Integer> getCapturableList(boolean whosTurn) { // 잡을 수 있는 말이 있는지를 찾기 위해 정의한 함수입니다. 객체의 blank의 값을 참조하여, 한 대각선 상에서 한칸 바로 옆에 있는 모든 경우의 수를 찾는 원리입니다.
+		// 하지만 추가적인 처리가 필요하여, 필요한 경우, CheckerGame class에서 조건에 맞지 않는 경우를 제외하도록 했습니다.
 		List<Integer> ableList = new ArrayList<Integer>();
 		for(int i = 0; i < 32; i++)
 			for(int j = 1; j < 32; j++) {
 				if(isConnected(i,j) && isOnBoard(i) && isOnBoard(j) && (getMarker(i).getPlayer() != getMarker(j).getPlayer()) && this.getMarker(i).getPlayer() == (whosTurn ? 0 : 1)) {
 					if(i - j == 4 && j > 5 && isConnected(j, j - 5)) {
-						ableList.add(i);
-						ableList.add(j);
+						ableList.add(i); // 짝수칸(0부터)에는 출발지점,
+						ableList.add(j); // 홀수칸에는 출발지점에서 잡을 수 있는 말의 위치를 담도록 표현했습니다.
 					}
 					else if(i - j == 4 && j > 3 && isConnected(j, j - 3)) {
 						ableList.add(i);
@@ -192,61 +198,62 @@ public class CheckerBoard extends Board{
 		return ableList;
 	}
 	
-	public void captureMarker(int position, int target, int targetPosition) {
+	public void captureMarker(int position, int target, int targetPosition) { // 말을 잡을 때에 사용하는 함수입니다. 원래는 잡고 난 이후에 이동까지 하도록 정의했지만, 디버그 과정이 너무 복잡하여 이동은 CheckerGame에서 하도록 했습니다.
 		Blank<Marker> temp = blank.get(target);
 		temp.popData();
 	}
 	
-	public List<Integer> whereCapturable(int a, boolean whosTurn/*, int b*/) {
+	public List<Integer> whereCapturable(int a, boolean whosTurn) { // getCapturable이 모든 말에서 잡을 수 있는 경우의 수를 찾는다면, 이 함수는 주어진 한 위치에서 잡을 수 있는 말이 있는지를 체크합니다.
 		List<Integer> ableList = new ArrayList<Integer>();
-		int player = whosTurn ? 0 : 1;
+		int player = whosTurn ? 0 : 1; // 플레이어 별로 판에서 위치에 대한 연산이 다르게 적용되어서, 삼항연산자로 int로 값을 받아오도록 했습니다.
 		
 		
 		
-		if(isConnected(a, a - 4) && connectionSilently[a][a - 9] && isConnected(a - 4, a - 9) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player /*&& getBlank(a - 9).isEmpty()*/) {
+		if(isConnected(a, a - 4) && connectionSilently[a][a - 9] && isConnected(a - 4, a - 9) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player) {
 			ableList.add(a - 9);
 		}
-		if(isConnected(a, a - 3) && connectionSilently[a][a - 7] && isConnected(a - 3, a - 7) && !getBlank(a - 3).isEmpty() && getMarker(a - 3).getPlayer() != player /*&& getBlank(a - 7).isEmpty()*/) {
+		if(isConnected(a, a - 3) && connectionSilently[a][a - 7] && isConnected(a - 3, a - 7) && !getBlank(a - 3).isEmpty() && getMarker(a - 3).getPlayer() != player) {
 			ableList.add(a - 7);
 		}
-		if(isConnected(a, a + 4) && connectionSilently[a][a + 7] && isConnected(a + 4, a + 7) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player /*&& getBlank(a + 7).isEmpty()*/) {
+		if(isConnected(a, a + 4) && connectionSilently[a][a + 7] && isConnected(a + 4, a + 7) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player) {
 			ableList.add(a + 7);
 		}
-		if(isConnected(a, a + 5) && connectionSilently[a][a + 9] && isConnected(a + 5, a + 9) && !getBlank(a + 5).isEmpty() && getMarker(a + 5).getPlayer() != player /*&& getBlank(a + 9).isEmpty()*/) {
+		if(isConnected(a, a + 5) && connectionSilently[a][a + 9] && isConnected(a + 5, a + 9) && !getBlank(a + 5).isEmpty() && getMarker(a + 5).getPlayer() != player) {
 			ableList.add(a + 9);
 		}
 		
-		if(isConnected(a, a - 5) && connectionSilently[a][a - 9] && isConnected(a - 5, a - 9) && !getBlank(a - 5).isEmpty() && getMarker(a - 5).getPlayer() != player /*&& getBlank(a - 9).isEmpty()*/) {
+		if(isConnected(a, a - 5) && connectionSilently[a][a - 9] && isConnected(a - 5, a - 9) && !getBlank(a - 5).isEmpty() && getMarker(a - 5).getPlayer() != player) {
 			ableList.add(a - 9);
 		}
-		if(isConnected(a, a - 4) && connectionSilently[a][a - 7] && isConnected(a - 4, a - 7) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player /*&& getBlank(a - 7).isEmpty()*/) {
+		if(isConnected(a, a - 4) && connectionSilently[a][a - 7] && isConnected(a - 4, a - 7) && !getBlank(a - 4).isEmpty() && getMarker(a - 4).getPlayer() != player) {
 			ableList.add(a - 7);
 		}
-		if(isConnected(a, a + 3) && connectionSilently[a][a + 7] && isConnected(a + 3, a + 7) && !getBlank(a + 3).isEmpty() && getMarker(a + 3).getPlayer() != player /*&& getBlank(a + 7).isEmpty()*/) {
+		if(isConnected(a, a + 3) && connectionSilently[a][a + 7] && isConnected(a + 3, a + 7) && !getBlank(a + 3).isEmpty() && getMarker(a + 3).getPlayer() != player) {
 			ableList.add(a + 7);
 		}
-		if(isConnected(a, a + 4) && connectionSilently[a][a + 9] && isConnected(a + 4, a + 9) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player /*&& getBlank(a + 9).isEmpty()*/) {
+		if(isConnected(a, a + 4) && connectionSilently[a][a + 9] && isConnected(a + 4, a + 9) && !getBlank(a + 4).isEmpty() && getMarker(a + 4).getPlayer() != player) {
 			ableList.add(a + 9);
 		}
 		
 		return ableList;
 	}
 	
-	public boolean isEmpty() {
+	public boolean isEmpty() { // 무승부 룰을 만들기 위해 만든 함수입니다. 이 게임 판의 위가 비어있는지를 체크하는 함수입니다만.. 어떻게 해도 원본 함수의 직접적인 값이 아니라 주소값만을 복사해 오기에, 그냥 비어있는 판의 형태를 객체의 toString과 비교하도록 했습니다. 같을 때에는 true, 다를 때에는 false를 출력합니다.
 		if("[] Ak []  1 []  2 []  3 \r\n 4 []  5 []  6 []  7 [] \r\n[]  8 []  9 [] 10 [] 11 \r\n12 [] 13 [] 14 [] 15 [] \r\n[] 16 [] 17 [] 18 [] 19 \r\n20 [] 21 [] 22 [] 23 [] \r\n[] 24 [] 25 [] 26 [] 27 \r\n28 [] 29 [] 30 [] Bk [] \r\n".equals(this.toString())) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static boolean isEquals(CheckerBoard a, CheckerBoard b) {
+	public static boolean isEquals(CheckerBoard a, CheckerBoard b) { // 무승부 룰을 만들기 위해 만든 함수입니다. 주어진 두 판이 같은지를 체크하는 함수입니다. 위의 isEmpty함수와 같이, 직접적인 값을 비교하는게 아니라 주소값만을 비교해서.. 이 함수도 toString을 비교하도록 했습니다.
+		// 판과 독립적으로 작동한다는 느낌이 있어서, static으로 정의해주었습니다.
 		if(a.toString().equals(b.toString()))
 			return true;
 		else
 			return false;
 	}
 	
-	public static CheckerBoard copy(CheckerBoard board) {
+	public static CheckerBoard copy(CheckerBoard board) { // 무승부 룰을 만들기 위해 만든 함수입니다. 주어진 판을 복사하여 새로운 판을 만듭니다. 이 함수 만큼은 주소 값이 아니라 실제 값만을 복사하게 만들기 위해서, blank클래스가 추가로 clone함수를 override하도록 만들어주었고, 이 함수를 이용하여 만들어 졌습니다.
 		CheckerBoard output = new CheckerBoard();
 		
 		for(int i = 0; i < 32; i++)
