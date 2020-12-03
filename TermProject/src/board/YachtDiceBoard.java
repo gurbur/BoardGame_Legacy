@@ -145,16 +145,42 @@ public class YachtDiceBoard extends Board{
 			}
 			else { // i: 8 ~ 14
 				if(scoreBoard[2 * i - 2] >= 10) {
-					if(scoreBoard[2 * i - 1] >= 10) {
-						output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
-					} else if(scoreBoard[2 * i - 1] == -1) {
-						output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢  X  ¦¢\n";
-					} else {
-						output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢  "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+					if(scoreBoard[2 * i -2] >= 100) {
+						if(scoreBoard[2 * i - 1] >= 10) {
+							if(scoreBoard[2 * i - 1] >= 100) {
+								output += scoreTable[i]+""+scoreBoard[2 * i - 2]+"  ¦¢"+scoreBoard[2 * i - 1]+"  ¦¢\n";
+							}
+							else {
+								output += scoreTable[i]+""+scoreBoard[2 * i - 2]+"  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+							}
+						} else if(scoreBoard[2 * i - 1] == -1) {
+							output += scoreTable[i]+""+scoreBoard[2 * i - 2]+"  ¦¢  X  ¦¢\n";
+						} else {
+							output += scoreTable[i]+""+scoreBoard[2 * i - 2]+"  ¦¢  "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
+					}
+					else {
+						if(scoreBoard[2 * i - 1] >= 10) {
+							if(scoreBoard[2 * i - 1] >= 100) {
+								output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢"+scoreBoard[2 * i - 1]+"  ¦¢\n";
+							}
+							else {
+								output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+							}
+						} else if(scoreBoard[2 * i - 1] == -1) {
+							output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢  X  ¦¢\n";
+						} else {
+							output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢  "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
 					}
 				} else if(scoreBoard[2 * i - 2] == -1) {
 					if(scoreBoard[2 * i - 1] >= 10) {
-						output += scoreTable[i]+"  X  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						if(scoreBoard[2 * i - 1] >= 100) {
+							output += scoreTable[i]+" "+scoreBoard[2 * i - 2]+"  ¦¢"+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
+						else {
+							output += scoreTable[i]+"  X  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
 					} else if(scoreBoard[2 * i - 1] == -1) {
 						output += scoreTable[i]+"  X  ¦¢  X  ¦¢\n";
 					} else {
@@ -162,7 +188,12 @@ public class YachtDiceBoard extends Board{
 					}
 				} else {
 					if(scoreBoard[2 * i - 1] >= 10) {
-						output += scoreTable[i]+"  "+scoreBoard[2 * i - 2]+"  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						if(scoreBoard[2 * i - 1] >= 100) {
+							output += scoreTable[i]+"  "+scoreBoard[2 * i - 2]+"  ¦¢"+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
+						else {
+							output += scoreTable[i]+"  "+scoreBoard[2 * i - 2]+"  ¦¢ "+scoreBoard[2 * i - 1]+"  ¦¢\n";
+						}
 					} else if(scoreBoard[2 * i - 1] == -1) {
 						output += scoreTable[i]+"  "+scoreBoard[2 * i - 2]+"  ¦¢  X  ¦¢\n";
 					} else {
