@@ -1,6 +1,12 @@
 # BoardGame
 board game making for term project of OOP.
 
+# 2020.12.03#gurbur331
+
+YachtDice완성!!
+
+이제 만칼라 진행해볼게요
+
 # 2020.11.28#gurbur331
 
 war 만드신거 기반으로 수정했습니다. 보니까 게임 중간에 생기는 에러는 전부 NullPointerException이어서..ㅎㅎ
