@@ -1,9 +1,12 @@
 package card;
 
+import java.util.Scanner;
+
 public class PlayingCard extends Card{
 
 	private final char suit;
 	private final int num;
+
 	public PlayingCard(char suit,int num) {
 		this.num = num;
 		this.suit = suit;
@@ -12,6 +15,14 @@ public class PlayingCard extends Card{
 	public int getNum() {
 		return num;
 	}
+	
+	public int getNum_forBlackjack() {
+		if(num>10) {
+			return 10;
+		}
+		return num;
+	}
+
 
 	public char getSuit() {
 		return suit;

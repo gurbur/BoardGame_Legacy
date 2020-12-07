@@ -1,54 +1,32 @@
 package blackjack;
 
-import java.util.ArrayList;
+import java.util.Scanner;
 
-
-import card.PlayingCard;
-import card.PlayingCardDeck;
 
 public class BlackJackTester {
-	public static ArrayList<PlayingCard> playingCardDeck = new ArrayList<PlayingCard>();
 	public static void main(String[] args) {
-
-		boolean doNeedJoker=false;
-
-		PlayingCardDeck	playingCardDeck1 = new PlayingCardDeck(doNeedJoker);
-		PlayingCardDeck	playingCardDeck2 = new PlayingCardDeck(doNeedJoker);
-		PlayingCardDeck	playingCardDeck3 = new PlayingCardDeck(doNeedJoker);
-		PlayingCardDeck	playingCardDeck4 = new PlayingCardDeck(doNeedJoker);
-		for(int i=0;i<52;i++) {
-			playingCardDeck.add(playingCardDeck1.pop());
-		}
-		for(int i=0;i<52;i++) {
-			playingCardDeck.add(playingCardDeck2.pop());
-		}
-		for(int i=0;i<52;i++) {
-			playingCardDeck.add(playingCardDeck3.pop());
-		}
-		for(int i=0;i<52;i++) {
-			playingCardDeck.add(playingCardDeck4.pop());
-		}
-		for(int i=0;i<52;i++) {
-			pop();
-		}
-		System.out.println("");
-		for(int i=0;i<52;i++) {
-			pop();
-		}
-		System.out.println("");
-		for(int i=0;i<52;i++) {
-			pop();
-		}
-		System.out.println("");for(int i=0;i<52;i++) {
-			pop();
-		}
+		Scanner in = new Scanner(System.in);
+		BlackJackGame blackjackGame;
+		blackjackGame = new BlackJackGame();//tester
 		
-	}	
-	
-	public static void pop() {
-		PlayingCard temp = playingCardDeck.get(0);
-		System.out.printf("%c%d ", temp.getSuit(), temp.getNum());
-		playingCardDeck.remove(0);
+		/*
+		 * System.out.println("게임시작: start, 게임종료: exit");
+		while(true) {
+			String isStart = in.nextLine();
+			if(isStart.equals("start") || isStart.equals("Start")) {
+				blackjackGame = new BlackJackGame();
+				break;
+			}
+			else if(isStart.equals("exit"))
+				return;
+			else {
+				System.out.println("잘못된 입력입니다. 다시 입력해 주세요(start OR exit).");
+			}
+		}
+		*/
+		
+		blackjackGame.gameStart();
+		in.close();
 	}
 		
 }
