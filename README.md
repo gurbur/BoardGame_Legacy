@@ -1,6 +1,13 @@
 # BoardGame
 board game making for term project of OOP.
 
+# 2020.12.07#jhy2018444
+Blackjack 완성했습니다.
+
+한가지 오류가 있는데 걸 돈을 입력받을 때(bet()에서) nextInt()에서 InputmismatchException이 발생할 때 trycatch로 해결이 안되네여...
+그래서 우선 catch(InputmismatchException)는 제외하고 만들었습니다. 
+중간에 player 클래스를 추가하게 되면서 시간이 좀 오래 걸렸네요,,,다음게임은 원카드로 할게요. 빨리 만들어볼게요!
+
 # 2020.12.03#gurbur331
 
 YachtDice완성!!
