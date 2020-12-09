@@ -10,7 +10,10 @@ public class MancalaGame implements Game{
 	private List<Blank<Integer>> blanks = new ArrayList<Blank<Integer>>();
 	private boolean whosTurn;
 	
-	
+	/*
+	 * This is test for moving from GitHub to GitLab
+	 * 
+	 */
 	
 	public MancalaGame() {
 		for(int i = 0; i < 14; i++) {
