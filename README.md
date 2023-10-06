@@ -1,5 +1,5 @@
-# BoardGame
-board game making for term project of OOP.
+# BoardGame_Legacy
+This is Legacy of old project, BoardGame.
 
 # 2020.12.09#gurbur331
 시험이랑 대체과제가 막 겹쳐서 시간이 안나서 이제 확인했네요 ㅠㅠ;
